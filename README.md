@@ -1,6 +1,6 @@
 # HackUTD Docs
 
-The centralized documentation for [HackUTD](https://hackutd.co)'s open source projects, built with [Mintlify](https://mintlify.com) and served at [docs.hackutd.co/docs](https://docs.hackutd.co/docs).
+The centralized documentation for [HackUTD](https://hackutd.co)'s open source projects, built with [Mintlify](https://mintlify.com) and served at [docs.hackutd.co](https://docs.hackutd.co).
 
 ## Repository structure
 
