@@ -1,55 +1,48 @@
-# Mintlify Starter Kit
+# HackUTD Docs
 
-Use the starter kit to get your docs deployed and ready to customize.
+The centralized documentation for [HackUTD](https://hackutd.co)'s open source projects, built with [Mintlify](https://mintlify.com) and served at [docs.hackutd.co/docs](https://docs.hackutd.co/docs).
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+## Repository structure
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+| Path | Description |
+| --- | --- |
+| `docs.json` | Site config: navigation, theme colors, logos, navbar, footer. |
+| `index.mdx` | Landing page (intro + project cards). |
+| `jury.mdx`, `harp.mdx`, `technical-documentation.mdx` | Project pages. |
+| `style.css` | Brand theme: HackUTD gradient, Satoshi font, buttons. Auto-loaded by Mintlify. |
+| `logo/` | `light.svg` (dark wordmark) and `dark.svg` (white wordmark). |
+| `favicon.svg` | Black HackUTD mark. |
+| `cloudflare-worker.js` | Reverse proxy that serves the docs under the `/docs` subdirectory. |
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+## Local development
 
-## AI-assisted writing
-
-Set up your AI coding tool to work with Mintlify:
+Install the [Mintlify CLI](https://www.npmjs.com/package/mint):
 
 ```bash
-npx skills add https://mintlify.com/docs
-```
-
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
-
-See the [AI tools guides](/ai-tools) for tool-specific setup.
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
 npm i -g mint
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+Run from the repo root (where `docs.json` lives):
 
-```
+```bash
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+Preview at `http://localhost:3000`. Check for broken links with `mint broken-links`.
 
-## Publishing changes
+## Branding
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+The HackUTD look is defined in `docs.json` (brand colors, light/dark logos, light mode default) and `style.css` (the brand gradient background, the [Satoshi](https://www.fontshare.com/fonts/satoshi) font via Fontshare, and button styles). The site defaults to light mode.
 
-## Need help?
+## Deployment
 
-### Troubleshooting
+Pushing to `main` triggers Mintlify's auto-deploy (via the Mintlify GitHub app) to the `*.mintlify.dev` deployment. The site is exposed at `docs.hackutd.co/docs` through `cloudflare-worker.js`, which reverse-proxies requests under `/docs` to the Mintlify origin. Update `DOCS_URL` / `CUSTOM_URL` in that file if the deployment subdomain or custom domain changes.
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+## Contributing
 
-### Resources
+Pages are MDX files with YAML frontmatter. Configuration lives in `docs.json`. See `AGENTS.md` for style preferences (active voice, sentence-case headings, concise sentences).
+
+## Resources
+
 - [Mintlify documentation](https://mintlify.com/docs)
+- [HackUTD](https://hackutd.co)
