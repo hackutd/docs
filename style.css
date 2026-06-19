@@ -54,14 +54,25 @@ html.dark body,
   background-size: cover;
 }
 
-/* Gradient accent on the main page heading */
-#content-area h1:first-of-type {
+/* Brand button (e.g. external links to live apps) */
+a.brand-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: #ffffff !important;
+  text-decoration: none !important;
   background: var(--hackutd-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  width: fit-content;
+  box-shadow: 0 8px 20px -10px rgba(255, 0, 94, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.brand-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -10px rgba(255, 0, 94, 0.7);
 }
 
 /* Cards: branded hover accent */
