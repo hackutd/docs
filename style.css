@@ -66,14 +66,11 @@ a.brand-button {
   color: #ffffff !important;
   text-decoration: none !important;
   background: #ff005e;
-  box-shadow: 0 8px 20px -10px rgba(255, 0, 94, 0.6);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 a.brand-button:hover {
-  transform: translateY(-1px);
   background: #e60054;
-  box-shadow: 0 12px 26px -10px rgba(255, 0, 94, 0.7);
 }
 
 /* Cards: branded hover accent */
