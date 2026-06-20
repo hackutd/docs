@@ -5,6 +5,3 @@
 # Draft content
 drafts/
 *.draft.mdx
-
-# Infra / deploy config (not docs content)
-cloudflare-worker.js
