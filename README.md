@@ -12,7 +12,6 @@ The centralized documentation for [HackUTD](https://hackutd.co)'s open source pr
 | `style.css` | Brand theme: HackUTD gradient, Satoshi font, buttons. Auto-loaded by Mintlify. |
 | `logo/` | `light.svg` (dark wordmark) and `dark.svg` (white wordmark). |
 | `favicon.svg` | Black HackUTD mark. |
-| `cloudflare-worker.js` | Reverse proxy that serves the docs under the `/docs` subdirectory. |
 
 ## Local development
 
@@ -36,7 +35,7 @@ The HackUTD look is defined in `docs.json` (brand colors, light/dark logos, ligh
 
 ## Deployment
 
-Pushing to `main` triggers Mintlify's auto-deploy (via the Mintlify GitHub app) to the `*.mintlify.dev` deployment. The site is exposed at `docs.hackutd.co/docs` through `cloudflare-worker.js`, which reverse-proxies requests under `/docs` to the Mintlify origin. Update `DOCS_URL` / `CUSTOM_URL` in that file if the deployment subdomain or custom domain changes.
+Pushing to `main` triggers Mintlify's auto-deploy (via the Mintlify GitHub app). The site is served at [docs.hackutd.co](https://docs.hackutd.co).
 
 ## Contributing
 
