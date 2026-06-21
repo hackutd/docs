@@ -3,8 +3,8 @@
   "theme": "mint",
   "name": "HackUTD Docs",
   "colors": {
-    "primary": "#FF491B",
-    "light": "#FFA21F",
+    "primary": "#FF005E",
+    "light": "#FF005E",
     "dark": "#FF005E"
   },
   "appearance": {
