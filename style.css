@@ -6,9 +6,7 @@
   --hackutd-gradient: radial-gradient(
     119.34% 84.58% at 6.07% 6.94%,
     #f4f4f4 23.56%,
-    #ffa21f 43.27%,
-    #ff491b 60.58%,
-    #ff005e 80.77%,
+    #ff005e 60.58%,
     #6c17fe 100%
   );
   --font-family-sans: 'Satoshi', ui-sans-serif, system-ui, -apple-system,
@@ -45,8 +43,7 @@ html.dark body,
   background-color: #1a1a1a;
   background-image: radial-gradient(
     119.34% 84.58% at 6.07% 6.94%,
-    rgba(255, 162, 31, 0.18) 0%,
-    rgba(255, 73, 27, 0.16) 35%,
+    rgba(255, 0, 94, 0.18) 0%,
     rgba(255, 0, 94, 0.16) 60%,
     rgba(108, 23, 254, 0.2) 100%
   );
@@ -76,6 +73,6 @@ a.brand-button:hover {
 /* Cards: branded hover accent */
 a[class*='card']:hover,
 .card:hover {
-  border-color: #ff491b;
-  box-shadow: 0 8px 30px -12px rgba(255, 73, 27, 0.35);
+  border-color: #ff005e;
+  box-shadow: 0 8px 30px -12px rgba(255, 0, 94, 0.35);
 }
