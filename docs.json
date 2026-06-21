@@ -23,8 +23,13 @@
         "group": "Projects",
         "pages": [
           "jury",
-          "harp",
-          "harp-getting-started"
+          {
+            "group": "Harp",
+            "pages": [
+              "harp/overview",
+              "harp/quickstart"
+            ]
+          }
         ]
       }
     ]
