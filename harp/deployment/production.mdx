@@ -1,0 +1,40 @@
+---
+title: "Production deployment"
+description: "The reference production setup"
+---
+
+Harp's production footprint is intentionally small: one container for the platform, one Vercel project for the marketing site, and a handful of managed services.
+
+{/* Diagram: a production topology diagram — Cloud Run running the Harp container (Go API + static portal), connected to managed Postgres (Neon), SuperTokens, Google Cloud Storage, and SendGrid; a separate Vercel box for the marketing site calling the Cloud Run service's /v1/public endpoints; DNS/users at the top. */}
+
+## One container for the platform
+
+The `Dockerfile` is a multi-stage build that produces a single minimal image:
+
+1. Builds the portal (`client/portal`) into static files.
+2. Builds a static Go binary.
+3. Ships both in a `scratch` image — the Go binary serves the API **and** the portal's static files on port 8080.
+
+There is no separate frontend server in production.
+
+## The reference stack (HackUTD's)
+
+| Concern | Service |
+| --- | --- |
+| Compute | Google Cloud Run (Cloud Build auto-deploys on merge to `main`) |
+| Database | Neon (managed PostgreSQL) |
+| Auth | SuperTokens (managed or self-hosted) |
+| File storage | Google Cloud Storage (resumes, assets) |
+| Email | SendGrid, or any SMTP provider |
+| Marketing site | Vercel, as an independent project |
+
+None of these are hard requirements — the container runs anywhere Docker does, and the backend only needs a Postgres URL, a SuperTokens connection, and SMTP credentials to be fully functional. Adopters can substitute their own providers via [environment variables](/harp/deployment/environment).
+
+## Optional capabilities
+
+- **Web push** needs a VAPID key pair (`task gen-vapid` generates one).
+- **Apple Wallet passes** need an Apple developer certificate set and are off by default (`APPLE_WALLET_ENABLED=false`).
+
+## Releases and upgrades
+
+Releases are automated with release-please: Conventional Commits on `main` accumulate into a release PR, and merging it cuts a tagged release with a changelog. Adopters upgrade by merging those tags into their fork — see [Forking & staying upstream](/harp/adoption/forking).

@@ -1,0 +1,34 @@
+---
+title: "Adoption guide"
+description: "Run Harp for your own hackathon"
+---
+
+Harp is built so another school can adopt it without rebuilding anything. Almost everything event-specific — the hackathon's name, dates, contact details, application form, scan types, FAQs, sponsors, and schedule — is runtime configuration managed from the super-admin UI, not code.
+
+{/* Diagram: the upstream/fork relationship — a box for hackutd/harp (upstream) with release tags flowing down into yourschool/harp (fork) via `git merge`, and beside it a separate yourschool marketing site built from the marketing template, connected to the fork's API by the public content API. */}
+
+## What adopting looks like
+
+1. **Fork the platform.** Fork `hackutd/harp` and keep upstream as a remote so you can pull platform improvements each year. See [Forking & staying upstream](/harp/adoption/forking).
+2. **Deploy it.** Stand up the Go API + portal, PostgreSQL, and SuperTokens, plus the optional services you want (GCS, email provider, web push, Apple Wallet). See [Deployment](/harp/deployment/production).
+3. **Configure your event.** Sign in as a super admin and complete onboarding: event name, dates, contact email, application deadline, and feature toggles. Then build your application form, scan types, FAQs, sponsors, and schedule from the admin UI.
+4. **Build your public site.** Start from the marketing template and redesign it for your event's theme, keeping its data layer pointed at your API's public endpoints. See [The marketing site](/harp/adoption/marketing-site).
+
+## What you customize vs. what you don't
+
+| You customize | You leave alone |
+| --- | --- |
+| Runtime settings (name, dates, deadline, toggles) | The Go backend and its business logic |
+| Application schema, scan types, content | The portal's pages and workflows |
+| Portal branding (colors, logo, app name) | Database migrations from upstream |
+| The marketing site — completely | The public API contract |
+
+The intent is that your fork's diff against upstream stays tiny: branding plus environment configuration. The smaller that diff, the cleaner each year's upstream merge.
+
+<Note>
+  Adoption tooling is actively being improved — a standalone marketing template repo, a committed `.env.example`, and a dedicated portal branding directory are in progress. This guide will be updated as they land.
+</Note>
+
+## After the event
+
+Run the annual reset workflow to clear event-specific activity while keeping your configuration, then pull the latest upstream release and start planning next year. See [Administration & reset](/harp/features/administration).

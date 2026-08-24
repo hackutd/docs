@@ -1,0 +1,64 @@
+---
+title: "Local development"
+description: "Run the full Harp stack on your machine"
+---
+
+Local development runs three processes: the Go API, the portal dev server, and (optionally) the marketing site — with PostgreSQL and SuperTokens in Docker.
+
+{/* Diagram: a local topology diagram — Docker containers for Postgres (:5432) and SuperTokens, the Go API on :8080, the portal dev server on :3000, and the marketing site on :3001, with arrows showing which talks to which. */}
+
+## Prerequisites
+
+- Go 1.24+, Node 22+, Docker
+- [Task](https://taskfile.dev) for the repo's task runner commands
+- [Air](https://github.com/air-verse/air) for Go live-reload (optional but recommended)
+
+## The zero-signup path
+
+`docker-compose.local-st.yml` self-hosts **both** PostgreSQL and SuperTokens, so you can run everything locally without creating any external accounts:
+
+```bash
+git clone https://github.com/hackutd/harp
+cd harp
+docker compose -f docker-compose.local-st.yml up -d
+```
+
+Google Cloud Storage is optional in local dev — leaving the bucket unset disables it. Email, web push, and Apple Wallet are similarly optional.
+
+## Run the backend
+
+```bash
+task migrate-up   # apply database migrations
+task seed         # optional: seed development data
+air               # Go API on :8080 with live reload
+```
+
+## Run the portal
+
+```bash
+cd client/portal
+npm install
+npm run dev       # http://localhost:3000
+```
+
+The portal owns port 3000 — it's pinned there by `FRONTEND_URL` and the SuperTokens website domain.
+
+## Run the marketing site (optional)
+
+```bash
+cd client/marketing
+npm install
+npm run dev       # http://localhost:3001
+```
+
+It needs `HARP_API_BASE_URL` and `HARP_PUBLIC_API_KEY` set (matching the backend's `PUBLIC_API_KEY`); without them the page renders setup instructions instead of live data.
+
+## Git hooks
+
+If you plan to commit, enable the repo's hooks once per clone:
+
+```bash
+task setup-hooks
+```
+
+See [Contributing](/harp/contributing) for what they enforce.

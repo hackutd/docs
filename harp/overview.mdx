@@ -1,15 +1,49 @@
 ---
 title: "Overview"
-description: "The HackUTD event management platform"
+description: "One platform for the full hackathon lifecycle"
 ---
 
-Harp is HackUTD's centralized management platform for running hackathons. It powers hacker applications, administrative review workflows, and event-day logistics like check-ins and meal tracking.
+Harp (Hacker Applications & Review Platform) is HackUTD's open-source platform for running a hackathon end to end. It handles everything from the moment applications open to the final day of the event: hacker applications, admin review workflows, acceptance decisions, check-ins, meals, schedules, and public event content.
+
+Harp is built to be adopted. Any school can run it for their own hackathon — the event's name, dates, application form, scan types, FAQs, sponsors, and schedule are all runtime settings, not code.
+
+## The full event lifecycle
+
+```mermaid
+flowchart LR
+    configure["Configure the event"] --> apply["Collect applications"]
+    apply --> review["Assign and review applications"]
+    review --> decide["Accept, reject, and notify"]
+    decide --> operate["Run check-in and event operations"]
+    operate --> reset["Reset for the next hackathon"]
+
+    configure -.-> publish["Publish schedules, FAQs, and sponsors"]
+    publish -.-> operate
+```
+
+## Where to go next
 
 <Columns cols={2}>
-  <Card title="Get Started" icon="rocket" href="/harp/quickstart">
-    Set up, configure, and run Harp for your event.
+  <Card title="Why Harp?" icon="lightbulb" href="/harp/why-harp">
+    What Harp replaces and why it exists.
   </Card>
-  <Card title="Technical Documentation" icon="book-open" href="https://deepwiki.com/hackutd/harp">
-    Architecture, APIs, and engineering guides for Harp.
+  <Card title="Features" icon="sparkles" href="/harp/features/hackers">
+    Everything the platform does, from applications to event day.
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/harp/architecture">
+    The three services and how they fit together.
+  </Card>
+  <Card title="Adopting Harp" icon="rocket" href="/harp/adoption/guide">
+    Run Harp for your own hackathon.
+  </Card>
+  <Card title="Deployment" icon="server" href="/harp/deployment/local">
+    Local development and production deployment.
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/harp/contributing">
+    Work on Harp itself.
   </Card>
 </Columns>
+
+<Note>
+  Looking for deep technical detail? The [DeepWiki technical documentation](https://deepwiki.com/hackutd/harp) covers architecture, APIs, and internals generated from the source.
+</Note>

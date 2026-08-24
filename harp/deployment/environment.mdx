@@ -1,0 +1,96 @@
+---
+title: "Environment variables"
+description: "Every variable the Go service reads"
+---
+
+The Go service is configured entirely through environment variables. Only four are required to boot; everything else has a sensible default or disables its feature when unset.
+
+<Note>
+  A committed `.env.example` template is in progress. Until it lands, this page is the reference; the source of truth is the `env.Get*` calls in `cmd/api/main.go`.
+</Note>
+
+## Required
+
+The service refuses to start without these:
+
+| Variable | Purpose |
+| --- | --- |
+| `AUTH_BASIC_USER` / `AUTH_BASIC_PASS` | Basic-auth credentials for protected operational endpoints |
+| `SUPERTOKENS_CONNECTION_URI` | SuperTokens core connection |
+| `SUPERTOKENS_API_KEY` | SuperTokens API key |
+
+## Core
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `ENV` | `development` | Environment name |
+| `ADDR` | `:8080` | Listen address |
+| `APP_URL` | `http://localhost:8080` | The API's own URL |
+| `FRONTEND_URL` | `APP_URL` | Portal URL (drives SuperTokens website domain) |
+| `APP_NAME` | `HackUTD Portal` | SuperTokens app name |
+
+## Database
+
+| Variable | Default |
+| --- | --- |
+| `DB_ADDR` | local dev Postgres URL |
+| `DB_MAX_OPEN_CONNS` | `30` |
+| `DB_MAX_IDLE_CONNS` | `30` |
+| `DB_MAX_IDLE_TIME` | `15m` |
+
+## OAuth
+
+| Variable | Purpose |
+| --- | --- |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Enable Google sign-in (optional) |
+
+## Public content API
+
+| Variable | Purpose |
+| --- | --- |
+| `PUBLIC_API_KEY` | Shared secret for `/v1/public/*`. Must match the marketing site's `HARP_PUBLIC_API_KEY` |
+| `PUBLIC_CORS_ORIGIN` | Extra allowed origin for public endpoints |
+
+## Email
+
+At least one provider (SendGrid **or** SMTP) is required for the mailer to initialize.
+
+| Variable | Purpose |
+| --- | --- |
+| `SENDGRID_API_KEY` | SendGrid provider |
+| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_USERNAME` / `EMAIL_PASSWORD` | SMTP provider |
+| `EMAIL_FROM` / `EMAIL_FROM_NAME` | Sender identity |
+
+## Event identity
+
+| Variable | Purpose |
+| --- | --- |
+| `HACKATHON_NAME` | **Bootstrap default only.** Once a super admin completes onboarding, the name comes from the database setting — renaming the event needs no redeploy |
+
+## Storage
+
+| Variable | Purpose |
+| --- | --- |
+| `GCS_BUCKET_NAME` | Google Cloud Storage bucket; empty disables GCS (valid for local dev) |
+| `GOOGLE_APPLICATION_CREDENTIALS` | GCP service-account credentials path |
+
+## Web push
+
+| Variable | Purpose |
+| --- | --- |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Web push keys — generate with `task gen-vapid` |
+
+## Apple Wallet (optional)
+
+Off by default (`APPLE_WALLET_ENABLED=false`). When enabled, set `APPLE_WALLET_PASS_TYPE_IDENTIFIER`, `APPLE_WALLET_TEAM_IDENTIFIER`, `APPLE_WALLET_ORGANIZATION_NAME`, `APPLE_WALLET_DESCRIPTION`, `APPLE_WALLET_CERTIFICATE_BASE64`, `APPLE_WALLET_PRIVATE_KEY_BASE64`, `APPLE_WALLET_WWDR_CERTIFICATE_BASE64`, and optionally `APPLE_WALLET_ICON_PATH`.
+
+## Rate limiting
+
+| Variable | Default |
+| --- | --- |
+| `RATE_LIMITER_ENABLED` | `true` |
+| `RATELIMITER_REQUESTS_COUNT` | `20` |
+
+## Portal (Vite)
+
+The portal reads its own env file with just two variables: `VITE_GOOGLE_AUTH_ENABLED` (show/hide Google sign-in) and `API_PROXY_TARGET` (dev-server API proxy).

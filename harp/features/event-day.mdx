@@ -1,0 +1,27 @@
+---
+title: "Event-day operations"
+description: "Check-ins, meals, scans, and live updates at scale"
+---
+
+Event day is Harp's highest-concurrency moment: hundreds of hackers checking in, eating, and moving between workshops. Everything runs off each hacker's personal QR code.
+
+{/* Diagram: a sequence diagram of a scan — hacker presents QR code → organizer's scanner in the portal → Go API validates the scan type and records it → live stats update on the admin dashboard. */}
+
+## Scanning
+
+- QR scanning for check-in, meals, workshops, and any custom activity
+- **Scan types** are configurable per event — create one for each activity you want to track
+- Live scan statistics so organizers can see attendance as it happens
+
+## Meals
+
+**Meal groups** split hackers into cohorts to load-balance food lines, with attendance visibility per group.
+
+## Schedule and announcements
+
+- Organizers create and update the schedule live during the event; hackers see changes immediately in the portal and the public site sees them through the [public API](/harp/reference/public-api)
+- **Scheduled announcements** go out as notifications, written manually or generated from schedule items
+
+## Hacker-facing resources
+
+Schedules, notifications, FAQs, and the hacker pack are all served from the portal, so "where do I find X?" has one answer all weekend.

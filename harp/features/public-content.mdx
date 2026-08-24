@@ -1,0 +1,20 @@
+---
+title: "Content & public site"
+description: "Manage public content once, publish it everywhere"
+---
+
+Fast-changing event content — the schedule, sponsors, and FAQs — is managed in the organizer portal and served to the public through Harp's content API. Organizers update it once; every consumer shows the latest version.
+
+{/* Diagram: a content-flow diagram — organizer edits content in the portal → Go API stores it → the marketing site fetches /v1/public/* with an API key → public visitors see the update (note the ~5 minute revalidation cadence on the marketing site). */}
+
+## What organizers manage
+
+- **Sponsors** — logos, tiers, and links
+- **FAQs** — questions and answers shown to hackers and the public
+- **Public schedule** — the event schedule, managed from the same place as the internal one
+
+## How the marketing site consumes it
+
+The public marketing site is a separate application that renders this content by calling the [public content API](/harp/reference/public-api) (`/v1/public/schedule`, `/v1/public/sponsors`, `/v1/public/faq`). The requests are authenticated with a shared API key and made server-side, so the key never reaches browsers.
+
+This is the core of the harp ↔ marketing-site relationship: the marketing site is a thin, redesign-every-year presentation layer, and Harp is the data layer behind it. See [The marketing site](/harp/adoption/marketing-site) for the full picture.
