@@ -12,15 +12,15 @@ Every hackathon needs a public website, and it should look different every year.
 | Layer | What it is | What you do with it |
 | --- | --- | --- |
 | Design (`app/`) | A basic page that proves the backend connection and shows what the public API returns | Replace it entirely with your year's themed design |
-| Data (`lib/`) | The API client, TypeScript types mirroring the Go structs, and formatting helpers | Keep it. This is the template's real value |
+| Data (`lib/`) | The API client, TypeScript types mirroring the Go structs, and formatting helpers | Keep it |
 
 ## How it talks to Harp
 
 The site fetches live schedule, sponsor, and FAQ data from the [public content API](/harp/reference/public-api):
 
 - Requests carry an `X-API-Key` header that must match the `PUBLIC_API_KEY` configured on the Go service.
-- All fetches are server-only (Server Components). The API key is a shared secret, so importing the API client into a client component fails the build rather than shipping the key to browsers. For the same reason the site can't be a static export.
-- Responses revalidate on a short cadence (about 5 minutes), so organizer edits in the portal reach the public site without a rebuild.
+- All fetches are server-only (Server Components). Importing the API client into a client component fails the build, and the site can't be a static export.
+- Responses revalidate about every 5 minutes, so organizer edits in the portal reach the public site without a rebuild.
 
 ## Environment
 
@@ -29,11 +29,9 @@ The site fetches live schedule, sponsor, and FAQ data from the [public content A
 | `HARP_API_BASE_URL` | Your Go service's base URL, no trailing slash |
 | `HARP_PUBLIC_API_KEY` | Must match `PUBLIC_API_KEY` on the Go service |
 
-Neither is browser-exposed, deliberately.
-
 ## Deploying
 
-The site deploys to Vercel as its own project, independent of the portal and backend, so a marketing redesign never risks the platform. Set both environment variables for Production and Preview, since preview deploys fetch at build time too.
+The site deploys to Vercel as its own project, independent of the portal and backend. Set both environment variables for Production and Preview.
 
 <Note>
   The marketing template currently lives at `client/marketing` inside the harp repo and is being extracted into a standalone `hackutd/harp-marketing` template repository. Once that lands, adopters will start from the template repo directly instead of the subdirectory.
