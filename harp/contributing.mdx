@@ -3,7 +3,7 @@ title: "Contributing"
 description: "Work on Harp itself"
 ---
 
-Want to improve Harp? Clone the repo and pick up an issue — **you don't need a fork** to contribute. Forks are for schools *running* their own hackathon (see [Adopting Harp](/harp/adoption/guide)); contributors work directly against `hackutd/harp`.
+Want to improve Harp? Clone the repo and pick up an issue. You don't need a fork to contribute. Forks are for schools *running* their own hackathon (see [Adopting Harp](/harp/adoption/guide)); contributors work directly against `hackutd/harp`.
 
 ## Getting started
 
@@ -27,22 +27,22 @@ fix: resolve pagination bug
 docs: clarify scan-type setup
 ```
 
-- **PR titles must be Conventional Commits too** — a CI check validates them, and they become the changelog entries when the release PR merges.
+- PR titles must be Conventional Commits too. A CI check validates them, and they become the changelog entries when the release PR merges.
 - `feat:` drives a minor version bump, `fix:` a patch, and a `!` or `BREAKING CHANGE:` footer a major.
-- **We prefer rebasing** over merge commits: keep your branch rebased on `main` so history stays linear.
+- We prefer rebasing over merge commits: keep your branch rebased on `main` so history stays linear.
 
 ## The git hooks
 
 `task setup-hooks` points git at the repo's hooks, which keep your commits clean before they reach CI:
 
-- **pre-commit** — runs `gofmt` on staged Go files and re-stages any fixes automatically. It never blocks a commit; it just keeps the CI format gate green.
-- **commit-msg** — rejects commit messages that aren't Conventional Commits, with a help text listing the valid types.
+- `pre-commit` runs `gofmt` on staged Go files and re-stages any fixes automatically. It never blocks a commit; it just keeps the CI format gate green.
+- `commit-msg` rejects commit messages that aren't Conventional Commits, with a help text listing the valid types.
 
 ## What CI checks
 
 Every PR runs two parallel jobs:
 
-- **Backend:** `gofmt`, `go vet`, `staticcheck`, build, and `go test -race`
-- **Portal:** Prettier check, ESLint, TypeScript build, and dependency audit
+- Backend: `gofmt`, `go vet`, `staticcheck`, build, and `go test -race`
+- Portal: Prettier check, ESLint, TypeScript build, and dependency audit
 
 Run the same commands locally before pushing to predict a green run.

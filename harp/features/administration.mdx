@@ -5,20 +5,20 @@ description: "Roles, runtime settings, and the annual reset"
 
 Harp separates who can do what with a small role hierarchy, and keeps everything event-specific in runtime settings so the platform survives from year to year.
 
-{/* Diagram: a role-hierarchy diagram — hacker, admin, super admin — with each role annotated with its permission scope (hackers: own application and event tools; admins: review, scans, content with granular permissions; super admins: identity settings, roles, reset). */}
+{/* Diagram: a role-hierarchy diagram (hacker, admin, super admin) with each role annotated with its permission scope. Hackers manage their own application and event tools; admins handle review, scans, and content with granular permissions; super admins own identity settings, roles, and the reset. */}
 
 ## Roles
 
-- **Hackers** manage their own application and use event-day tools.
-- **Admins** run reviews, scans, and content, with granular per-area permissions (schedules, sponsors, FAQs) so organizers only touch what they own.
-- **Super admins** control the hackathon's identity and configuration, manage user roles, and run protected workflows like the annual reset.
+- Hackers manage their own application and use event-day tools.
+- Admins run reviews, scans, and content, with granular per-area permissions (schedules, sponsors, FAQs) so organizers only touch what they own.
+- Super admins control the hackathon's identity and configuration, manage user roles, and run protected workflows like the annual reset.
 
 User search and role management are built into the super-admin UI.
 
 ## Runtime event configuration
 
-The hackathon's name, event dates, contact details, application deadline, and feature toggles are database settings managed through a super-admin onboarding flow and settings pages. Feature toggles let organizers enable functionality (applications, wallet passes, and so on) as the event approaches — no deploys required.
+The hackathon's name, event dates, contact details, application deadline, and feature toggles are database settings managed through a super-admin onboarding flow and settings pages. Feature toggles let organizers enable functionality (applications, wallet passes, and so on) as the event approaches, without any deploys.
 
 ## Annual reset
 
-When the event ends, the **reset workflow** clears event-specific activity — applications, reviews, scans, notifications — while preserving reusable configuration like the application schema and scan types. Next year's team starts from a configured platform instead of an empty database.
+When the event ends, the reset workflow clears event-specific activity such as applications, reviews, scans, and notifications, while preserving reusable configuration like the application schema and scan types. Next year's team starts from a configured platform instead of an empty database.

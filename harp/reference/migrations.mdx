@@ -8,23 +8,23 @@ Harp's database migrations are managed with golang-migrate. This page explains t
 ## The numbering contract
 
 - Migrations are named `{6-digit version}_{description}.{up|down}.sql`, one concern per migration.
-- Versions are **strictly contiguous** from `000001`, with exactly one up and one down file per version.
+- Versions are strictly contiguous from `000001`, with exactly one up and one down file per version.
 - CI enforces this: `scripts/check-migrations.sh` runs on every PR and fails on gaps or duplicate versions.
 
 ## Why it has to be this way
 
-golang-migrate stores a single integer version in the `schema_migrations` table and only ever applies migrations with a version **strictly greater** than it.
+golang-migrate stores a single integer version in the `schema_migrations` table and only ever applies migrations with a version strictly greater than it.
 
-That makes numbering load-bearing, not cosmetic — and it's why a fork can't just pick a high number (say `000900`) to stay out of upstream's way: once your database is at version 900, every later upstream migration (`000032`, `000033`, …) is **silently skipped** with no error.
+That makes numbering load-bearing, not cosmetic. It's also why a fork can't just pick a high number (say `000900`) to stay out of upstream's way: once your database is at version 900, every later upstream migration (`000032`, `000033`, and so on) is silently skipped with no error.
 
-{/* Diagram: a number-line diagram of migration versions — upstream's contiguous sequence 1..31, a fork's migration at 32, then upstream's next release also claiming 32, with the resolution arrow showing the fork renumbering its migration to 33. */}
+{/* Diagram: a number-line diagram of migration versions. Upstream's contiguous sequence 1..31, a fork's migration at 32, then upstream's next release also claiming 32, with the resolution arrow showing the fork renumbering its migration to 33. */}
 
 ## The fork procedure
 
-1. **Expect collisions.** Upstream will eventually claim the number you used; the CI check will tell you (`version X is used by both A and B`).
-2. **Renumber yours, never upstream's.** Move your migration above upstream's new maximum.
-3. **If yours already ran in production**, renumbering changes its identity — hand-fix the `schema_migrations` table before running `migrate up` again. Do this before your next event, not during it.
-4. **Keep fork migrations rare.** Few, additive (new columns or tables), and at the tail. Prefer a runtime setting over a schema change wherever the choice exists.
+1. Expect collisions. Upstream will eventually claim the number you used; the CI check will tell you (`version X is used by both A and B`).
+2. Renumber yours, never upstream's. Move your migration above upstream's new maximum.
+3. If yours already ran in production, renumbering changes its identity. Hand-fix the `schema_migrations` table before running `migrate up` again, and do this before your next event, not during it.
+4. Keep fork migrations rare: few, additive (new columns or tables), and at the tail. Prefer a runtime setting over a schema change wherever the choice exists.
 
 ## Day-to-day commands
 

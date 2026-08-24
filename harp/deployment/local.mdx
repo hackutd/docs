@@ -3,9 +3,9 @@ title: "Local development"
 description: "Run the full Harp stack on your machine"
 ---
 
-Local development runs three processes: the Go API, the portal dev server, and (optionally) the marketing site — with PostgreSQL and SuperTokens in Docker.
+Local development runs three processes: the Go API, the portal dev server, and (optionally) the marketing site, with PostgreSQL and SuperTokens in Docker.
 
-{/* Diagram: a local topology diagram — Docker containers for Postgres (:5432) and SuperTokens, the Go API on :8080, the portal dev server on :3000, and the marketing site on :3001, with arrows showing which talks to which. */}
+{/* Diagram: a local topology diagram. Docker containers for Postgres (:5432) and SuperTokens, the Go API on :8080, the portal dev server on :3000, and the marketing site on :3001, with arrows showing which talks to which. */}
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Local development runs three processes: the Go API, the portal dev server, and (
 
 ## The zero-signup path
 
-`docker-compose.local-st.yml` self-hosts **both** PostgreSQL and SuperTokens, so you can run everything locally without creating any external accounts:
+`docker-compose.local-st.yml` self-hosts both PostgreSQL and SuperTokens, so you can run everything locally without creating any external accounts:
 
 ```bash
 git clone https://github.com/hackutd/harp
@@ -23,7 +23,7 @@ cd harp
 docker compose -f docker-compose.local-st.yml up -d
 ```
 
-Google Cloud Storage is optional in local dev — leaving the bucket unset disables it. Email, web push, and Apple Wallet are similarly optional.
+Google Cloud Storage is optional in local dev; leaving the bucket unset disables it. Email, web push, and Apple Wallet are similarly optional.
 
 ## Run the backend
 
@@ -41,7 +41,7 @@ npm install
 npm run dev       # http://localhost:3000
 ```
 
-The portal owns port 3000 — it's pinned there by `FRONTEND_URL` and the SuperTokens website domain.
+The portal owns port 3000. It's pinned there by `FRONTEND_URL` and the SuperTokens website domain.
 
 ## Run the marketing site (optional)
 

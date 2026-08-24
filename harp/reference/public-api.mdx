@@ -3,7 +3,7 @@ title: "Public content API"
 description: "The /v1/public endpoints that power the marketing site"
 ---
 
-Harp exposes a small content API for public consumers — primarily the marketing site. "Public" means it needs no user session, **not** that it's unauthenticated: every request must carry an API key.
+Harp exposes a small content API for public consumers, primarily the marketing site. "Public" means it needs no user session, not that it's unauthenticated: every request must carry an API key.
 
 ## Authentication
 
@@ -25,7 +25,7 @@ All responses use Harp's standard envelope:
 
 ## Sponsor logos
 
-`logo_data` is **raw base64**, not a URL — pair it with `logo_content_type` to build a data URI. Because logos are inlined, the sponsors response grows with every sponsor; cache accordingly on the consumer side.
+`logo_data` is raw base64, not a URL. Pair it with `logo_content_type` to build a data URI. Because logos are inlined, the sponsors response grows with every sponsor; cache accordingly on the consumer side.
 
 ## Example
 
@@ -35,5 +35,5 @@ curl -H "X-API-Key: $HARP_PUBLIC_API_KEY" \
 ```
 
 <Note>
-  The full private API (applications, reviews, scans, and everything else the portal uses) is documented via Swagger in the harp repo and requires an authenticated user session — it is not part of this public contract.
+  The full private API (applications, reviews, scans, and everything else the portal uses) is documented via Swagger in the harp repo and requires an authenticated user session. It is not part of this public contract.
 </Note>

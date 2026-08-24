@@ -53,7 +53,7 @@ The service refuses to start without these:
 
 ## Email
 
-At least one provider (SendGrid **or** SMTP) is required for the mailer to initialize.
+At least one provider (SendGrid or SMTP) is required for the mailer to initialize.
 
 | Variable | Purpose |
 | --- | --- |
@@ -65,7 +65,7 @@ At least one provider (SendGrid **or** SMTP) is required for the mailer to initi
 
 | Variable | Purpose |
 | --- | --- |
-| `HACKATHON_NAME` | **Bootstrap default only.** Once a super admin completes onboarding, the name comes from the database setting — renaming the event needs no redeploy |
+| `HACKATHON_NAME` | Bootstrap default only. Once a super admin completes onboarding, the name comes from the database setting, so renaming the event needs no redeploy |
 
 ## Storage
 
@@ -78,7 +78,7 @@ At least one provider (SendGrid **or** SMTP) is required for the mailer to initi
 
 | Variable | Purpose |
 | --- | --- |
-| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Web push keys — generate with `task gen-vapid` |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Web push keys, generated with `task gen-vapid` |
 
 ## Apple Wallet (optional)
 
