@@ -1,0 +1,38 @@
+---
+title: "The marketing site"
+description: "A redesign-every-year template on top of Harp's public API"
+---
+
+Every hackathon needs a public website, and it should look different every year. Harp's answer is a deliberately minimal Next.js marketing template: a scaffold whose design you replace each iteration, built around a data layer you keep forever.
+
+{/* Diagram: an anatomy diagram of the marketing template repo. The app/ directory highlighted as "throwaway: redesign every year" and the lib/ data layer highlighted as "keep: types, API client, formatting", with an arrow from lib/ to the Harp /v1/public endpoints. */}
+
+## The template, in two layers
+
+| Layer | What it is | What you do with it |
+| --- | --- | --- |
+| Design (`app/`) | A basic page that proves the backend connection and shows what the public API returns | Replace it entirely with your year's themed design |
+| Data (`lib/`) | The API client, TypeScript types mirroring the Go structs, and formatting helpers | Keep it |
+
+## How it talks to Harp
+
+The site fetches live schedule, sponsor, and FAQ data from the [public content API](/harp/reference/public-api):
+
+- Requests carry an `X-API-Key` header that must match the `PUBLIC_API_KEY` configured on the Go service.
+- All fetches are server-only (Server Components). Importing the API client into a client component fails the build, and the site can't be a static export.
+- Responses revalidate about every 5 minutes, so organizer edits in the portal reach the public site without a rebuild.
+
+## Environment
+
+| Variable | Purpose |
+| --- | --- |
+| `HARP_API_BASE_URL` | Your Go service's base URL, no trailing slash |
+| `HARP_PUBLIC_API_KEY` | Must match `PUBLIC_API_KEY` on the Go service |
+
+## Deploying
+
+The site deploys to Vercel as its own project, independent of the portal and backend. Set both environment variables for Production and Preview.
+
+<Note>
+  The marketing template currently lives at `client/marketing` inside the harp repo and is being extracted into a standalone `hackutd/harp-marketing` template repository. Once that lands, adopters will start from the template repo directly instead of the subdirectory.
+</Note>

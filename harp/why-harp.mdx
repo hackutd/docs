@@ -1,0 +1,26 @@
+---
+title: "Why Harp?"
+description: "What Harp replaces and the ideas behind it"
+---
+
+Running a hackathon usually means stitching together a form builder, spreadsheets, an email tool, a check-in app, and a website. None of them talk to each other. Harp brings that work into one system with one source of truth.
+
+## The problems it solves
+
+| Without Harp | With Harp |
+| --- | --- |
+| Applications in a form tool, reviews in a spreadsheet | Configurable application forms with a built-in review pipeline |
+| Decision emails sent by hand, one batch at a time | Bulk decision emails with delivery tracking |
+| Check-in lists printed or in yet another app | QR scanning for check-in, meals, workshops, and custom activities |
+| Schedule and FAQ updates require a website redeploy | Organizers edit content in the portal and the public site updates automatically |
+| Everything rebuilt from scratch every year | An annual reset that keeps configuration and clears event data |
+
+## Design principles
+
+Configuration over code. The hackathon's identity (name, dates, contact email, application schema, scan types, feature toggles) lives in the database and is managed from the super-admin UI. Renaming your event or changing the application deadline never requires a deploy.
+
+A stable platform with a fresh face. The participant portal stays familiar from year to year, while the public marketing site is deliberately separate and meant to be redesigned for every iteration of the event. See [Architecture](/harp/architecture) for how that split works.
+
+Built to be adopted. Harp is not HackUTD-specific. Another school can run it by deploying the services and filling in their own settings. See [Adopting Harp](/harp/adoption/guide).
+
+{/* Diagram: a "before/after" illustration. The left side shows a scattered mess of tool logos (forms, spreadsheets, email, check-in app) with arrows between organizers; the right side shows the single Harp platform with hackers, organizers, and the public site connected to it. */}

@@ -1,0 +1,29 @@
+---
+title: "Applications & review"
+description: "From configurable forms to bulk decisions"
+---
+
+Harp's admissions pipeline takes an event from "applications open" to "every applicant notified" without leaving the platform.
+
+{/* Diagram: a swimlane diagram with three lanes (Applicant, Reviewer, Admin) showing an application flowing from submission, through batch assignment and reviewer votes, to a decision status and the outgoing decision email. */}
+
+## Configurable applications
+
+Application sections, fields, and validation rules are stored as a dynamic schema, so each event designs its own form from the admin UI. Changing a question doesn't require a code change or a redeploy.
+
+## Review pipeline
+
+- Batch assignment distributes applications across reviewers automatically, balancing workload.
+- Reviewers cast structured votes and leave notes. Each application receives a configurable number of reviews.
+- Admins see searchable applicant records, application statistics, and completed-review history.
+- An AI-usage metric flags applications with suspected AI-written responses to help reviewers calibrate.
+
+## Decisions and notification
+
+- Admins move applicants between accepted, rejected, and waitlisted states.
+- Bulk decision emails deliver status notifications to whole cohorts at once, with delivery progress tracking.
+- Email branding (event name, contact address) follows the runtime hackathon settings.
+
+## Walk-ins
+
+On event day, a first-in-first-out walk-in queue manages unregistered attendees and promotes them into the event as capacity allows.

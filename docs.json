@@ -27,7 +27,42 @@
             "group": "Harp",
             "pages": [
               "harp/overview",
-              "harp/quickstart"
+              "harp/why-harp",
+              {
+                "group": "Features",
+                "pages": [
+                  "harp/features/hackers",
+                  "harp/features/applications",
+                  "harp/features/event-day",
+                  "harp/features/public-content",
+                  "harp/features/administration"
+                ]
+              },
+              "harp/architecture",
+              {
+                "group": "Adopting Harp",
+                "pages": [
+                  "harp/adoption/guide",
+                  "harp/adoption/forking",
+                  "harp/adoption/marketing-site"
+                ]
+              },
+              {
+                "group": "Deployment",
+                "pages": [
+                  "harp/deployment/local",
+                  "harp/deployment/production",
+                  "harp/deployment/environment"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "harp/reference/public-api",
+                  "harp/reference/migrations"
+                ]
+              },
+              "harp/contributing"
             ]
           }
         ]
@@ -51,6 +86,12 @@
       "href": "https://hackutd.co"
     }
   },
+  "redirects": [
+    {
+      "source": "/harp/quickstart",
+      "destination": "/harp/deployment/local"
+    }
+  ],
   "contextual": {
     "options": [
       "copy",

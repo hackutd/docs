@@ -1,0 +1,199 @@
+---
+title: "Production deployment"
+description: "Deploy Harp to Google Cloud, step by step"
+---
+
+This guide walks through deploying Harp to production by hand. There is no CLI, npx script, or one-shot runbook yet that does all of this for you. One is planned, but for now you deploy manually, and this page describes each step in depth.
+
+The recommended stack is the cheapest way to run Harp:
+
+| Concern | Service | Why |
+| --- | --- | --- |
+| Compute | Google Cloud Run | Serverless |
+| Database | Neon | Serverless PostgreSQL with a free tier |
+| File storage | Google Cloud Storage | Cheap at hackathon scale |
+| Auth | SuperTokens | Free under 5K monthly active users |
+| Email | SendGrid (or any SMTP provider) | Free tier |
+| Marketing site | Vercel | Free hobby tier |
+
+{/* Diagram: a production topology diagram. Cloud Run running the Harp container (Go API + static portal) connected to Neon Postgres and the SuperTokens managed core (or an optional self-hosted core on a second Cloud Run service); GCS and SendGrid hanging off the API; a separate Vercel box for the marketing site calling the Cloud Run service's /v1/public endpoints; users and DNS at the top. */}
+
+## How the platform ships
+
+The `Dockerfile` is a multi-stage build that produces one image:
+
+1. Builds the portal (`client/portal`) into static files.
+2. Builds a static Go binary.
+3. Ships both in a `scratch` image. The Go binary serves the API and the portal's static files on port 8080.
+
+One container is the whole platform.
+
+## Prerequisites
+
+- A Google Cloud account with billing enabled, plus the `gcloud` CLI
+- A [Neon](https://neon.tech) account
+- A [SendGrid](https://sendgrid.com) account (or SMTP credentials)
+- Your fork of the harp repo on GitHub
+
+## Step 1: Create the Google Cloud project
+
+```bash
+gcloud projects create YOUR_PROJECT_ID --name="harp" --set-as-default
+gcloud billing projects link YOUR_PROJECT_ID --billing-account=YOUR_BILLING_ACCOUNT
+```
+
+Enable the services the deployment needs:
+
+```bash
+gcloud services enable \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com \
+  secretmanager.googleapis.com \
+  iam.googleapis.com \
+  iamcredentials.googleapis.com \
+  storage.googleapis.com \
+  logging.googleapis.com
+```
+
+Pick a region close to your school (the examples below use `us-south1`) and grab the project number:
+
+```bash
+export PROJECT_NUMBER="$(gcloud projects describe YOUR_PROJECT_ID --format='value(projectNumber)')"
+export COMPUTE_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+```
+
+The default compute service account (`COMPUTE_SA`) is what Cloud Run and Cloud Build will run as. Give it the roles the pipeline needs:
+
+```bash
+for role in roles/artifactregistry.writer roles/iam.serviceAccountTokenCreator \
+            roles/iam.serviceAccountUser roles/logging.logWriter roles/run.admin; do
+  gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+    --member="serviceAccount:${COMPUTE_SA}" --role="$role" --condition=None
+done
+```
+
+The `serviceAccountTokenCreator` grant is required: the API uses it to sign GCS upload URLs.
+
+## Step 2: Create the database on Neon
+
+Create a Neon project and a database. Use the pooled connection string for the API; keep it aside as `DB_ADDR`. Set `DB_MAX_OPEN_CONNS=15` or so, since each Cloud Run instance opens its own pool.
+
+Run the migrations against it once from your machine:
+
+```bash
+export DB_ADDR="postgres://...neon pooled URI..."
+task migrate-up
+```
+
+## Step 3: Stand up SuperTokens
+
+Use SuperTokens' managed service, which is free under 5,000 monthly active users. This is what HackUTD runs on. Sign up at [supertokens.com](https://supertokens.com), create a core, and copy the connection URI and API key into `SUPERTOKENS_CONNECTION_URI` and `SUPERTOKENS_API_KEY`.
+
+If you expect to exceed the free tier, the core is open source and self-hostable. It needs a Postgres database (a second database in the same Neon project works). Deploy it as its own Cloud Run service:
+
+```bash
+gcloud run deploy supertokens \
+  --image=registry.supertokens.io/supertokens/supertokens-postgresql \
+  --region=us-south1 \
+  --port=3567 \
+  --set-env-vars="POSTGRESQL_CONNECTION_URI=postgres://...neon supertokens db...,API_KEYS=YOUR_LONG_RANDOM_KEY" \
+  --min-instances=0
+```
+
+The service URL becomes `SUPERTOKENS_CONNECTION_URI` and the key becomes `SUPERTOKENS_API_KEY`. Only the Harp backend should be talking to it.
+
+## Step 4: Create the storage bucket
+
+```bash
+gcloud storage buckets create gs://YOUR_BUCKET_NAME \
+  --location=US --uniform-bucket-level-access
+```
+
+The bucket stays private; the API hands out short-lived signed URLs. Browsers upload resumes directly to GCS, so the bucket needs CORS for your app's origin:
+
+```json
+[
+  {
+    "origin": ["http://localhost:3000", "https://YOUR_APP_URL"],
+    "method": ["OPTIONS", "HEAD", "GET", "PUT"],
+    "responseHeader": ["Content-Type", "x-goog-content-length-range", "ETag"],
+    "maxAgeSeconds": 3600
+  }
+]
+```
+
+```bash
+gcloud storage buckets update gs://YOUR_BUCKET_NAME --cors-file=cors.json
+```
+
+You won't know `YOUR_APP_URL` until step 6 creates the Cloud Run service, so come back and update the CORS file then.
+
+## Step 5: Set up continuous deployment
+
+Create an Artifact Registry repository for the images:
+
+```bash
+gcloud artifacts repositories create cloud-run-source-deploy \
+  --location=us-south1 --repository-format=docker
+```
+
+Then connect Cloud Build to your GitHub repo (a one-time browser step: install the Cloud Build GitHub App and authorize your fork) and create a push trigger on `main` that builds with the repo's `Dockerfile`, pushes the image tagged with the commit SHA, and deploys it with `gcloud run services update`.
+
+The Cloud Run console can generate this trigger for you: create the service with "Continuously deploy from a repository". This is how HackUTD runs it. After that, every merge to `main` deploys itself.
+
+## Step 6: Create the Cloud Run service
+
+The service configuration that has worked in practice:
+
+- 1 vCPU, 512 MiB memory, CPU startup boost on
+- Concurrency 80, request timeout 300s
+- Minimum instances 0, maximum around 20
+- Port 8080, public ingress
+
+Set the environment variables from the [environment reference](/harp/deployment/environment). The required set is `AUTH_BASIC_USER`, `AUTH_BASIC_PASS`, `SUPERTOKENS_CONNECTION_URI`, and `SUPERTOKENS_API_KEY`; a real deployment also sets `ENV=prod`, `APP_URL` (the Cloud Run URL), `DB_ADDR`, `GCS_BUCKET_NAME`, the email settings, `PUBLIC_API_KEY`, `HACKATHON_NAME`, and the VAPID keys (`task gen-vapid` generates a pair).
+
+Put secrets in Secret Manager rather than plaintext env vars, and reference them from the service:
+
+```bash
+printf '%s' "$SENDGRID_API_KEY" | gcloud secrets create SENDGRID_API_KEY --data-file=-
+gcloud secrets add-iam-policy-binding SENDGRID_API_KEY \
+  --member="serviceAccount:${COMPUTE_SA}" --role="roles/secretmanager.secretAccessor"
+
+gcloud run services update harp --region=us-south1 \
+  --set-secrets='SENDGRID_API_KEY=SENDGRID_API_KEY:latest'
+```
+
+`APP_URL` is the service's own URL, which doesn't exist until the first deploy. Deploy once, read the URL, set `APP_URL`, and deploy again. Update the GCS CORS config from step 4 with the same URL.
+
+## Step 7: Google OAuth (optional but recommended)
+
+If you want "Sign in with Google", create an OAuth web client in the Google Auth Platform console:
+
+1. Configure the consent screen with your team's support email.
+2. Create a web application client.
+3. Add your `APP_URL` as an authorized JavaScript origin.
+4. Add `APP_URL/auth/callback/google` as an authorized redirect URI.
+5. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` on the Cloud Run service.
+
+Add the localhost equivalents (`http://localhost:3000` and its callback) if you want Google login in local dev against the same client.
+
+## Step 8: Deploy the marketing site
+
+The marketing site is a separate Vercel project. Import the repo into Vercel, then set `HARP_API_BASE_URL` to your Cloud Run URL and `HARP_PUBLIC_API_KEY` to the same value as the backend's `PUBLIC_API_KEY`, for both Production and Preview. See [The marketing site](/harp/adoption/marketing-site) for details.
+
+## Step 9: Verify
+
+- Open `APP_URL` and confirm the portal loads.
+- Create an account, sign in, and complete super-admin onboarding.
+- Upload a resume in a test application to confirm the GCS signing path and CORS.
+- Send yourself a decision email to confirm the email provider.
+- `curl -H "X-API-Key: ..." APP_URL/v1/public/schedule` to confirm the public API.
+
+## Releases and upgrades
+
+Releases are automated with release-please: Conventional Commits on `main` accumulate into a release PR, and merging it cuts a tagged release. The CD trigger deploys every merge to `main`. Adopters upgrade by merging release tags into their fork, see [Forking & staying upstream](/harp/adoption/forking).
+
+<Note>
+  A CLI that automates this setup is planned. Until then, this manual path is the supported one.
+</Note>

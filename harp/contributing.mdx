@@ -1,0 +1,48 @@
+---
+title: "Contributing"
+description: "Work on Harp itself"
+---
+
+Want to improve Harp? Clone the repo and pick up an issue. You don't need a fork to contribute. Forks are for schools *running* their own hackathon (see [Adopting Harp](/harp/adoption/guide)); contributors work directly against `hackutd/harp`.
+
+## Getting started
+
+```bash
+git clone https://github.com/hackutd/harp
+cd harp
+task setup-hooks   # enable the repo's git hooks (once per clone)
+```
+
+Then follow [Local development](/harp/deployment/local) to get the stack running, and browse the [open issues](https://github.com/hackutd/harp/issues) for something to work on.
+
+## Commit and PR conventions
+
+Harp's releases are generated automatically from commit history, so commit messages follow [Conventional Commits](https://www.conventionalcommits.org):
+
+```
+type(optional-scope): description
+
+feat(auth): add Google OAuth login
+fix: resolve pagination bug
+docs: clarify scan-type setup
+```
+
+- PR titles must be Conventional Commits too. A CI check validates them, and they become the changelog entries when the release PR merges.
+- `feat:` drives a minor version bump, `fix:` a patch, and a `!` or `BREAKING CHANGE:` footer a major.
+- We prefer rebasing over merge commits: keep your branch rebased on `main` so history stays linear.
+
+## The git hooks
+
+`task setup-hooks` points git at the repo's hooks, which keep your commits clean before they reach CI:
+
+- `pre-commit` runs `gofmt` on staged Go files and re-stages any fixes automatically. It never blocks a commit; it just keeps the CI format gate green.
+- `commit-msg` rejects commit messages that aren't Conventional Commits, with a help text listing the valid types.
+
+## What CI checks
+
+Every PR runs two parallel jobs:
+
+- Backend: `gofmt`, `go vet`, `staticcheck`, build, and `go test -race`
+- Portal: Prettier check, ESLint, TypeScript build, and dependency audit
+
+Run the same commands locally before pushing to predict a green run.

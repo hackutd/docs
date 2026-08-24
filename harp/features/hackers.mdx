@@ -1,0 +1,28 @@
+---
+title: "Hacker experience"
+description: "What participants see and do in the portal"
+---
+
+Hackers interact with Harp through the React portal, an installable PWA that carries them from application through event day.
+
+{/* Diagram: a hacker journey timeline (apply, get accepted, check in, participate) with a screenshot of the corresponding portal screen annotated under each stage. */}
+
+## Applying
+
+- Account creation and secure sign-in (email/password, with optional Google OAuth)
+- A configurable, multi-step application form with resume upload
+- Application submission and live status tracking (submitted, accepted, waitlisted, rejected)
+
+The application form itself is defined by organizers at runtime. Sections, fields, and validation are configuration, not code. See [Applications & review](/harp/features/applications).
+
+## During the event
+
+- A personalized dashboard with the event schedule, FAQ, and hacker pack
+- A personal QR code used for check-in and every activity scan
+- A notification feed plus opt-in web push notifications
+- Points and participation tracking as they attend workshops and activities
+- An optional Apple Wallet event pass (`.pkpass`) as an alternative to the in-app QR code
+
+## The portal as an app
+
+The portal ships as a PWA. Hackers can install it to their home screen, and push notifications reach them even when the site isn't open. This matters on event day, when announcements like "food is ready" or "judging starts in 15 minutes" need to land right away.

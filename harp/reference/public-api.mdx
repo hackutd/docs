@@ -1,0 +1,39 @@
+---
+title: "Public content API"
+description: "The /v1/public endpoints that power the marketing site"
+---
+
+Harp exposes a small content API for public consumers, primarily the marketing site. "Public" means it needs no user session, not that it's unauthenticated: every request must carry an API key.
+
+## Authentication
+
+Requests send an `X-API-Key` header that must match the `PUBLIC_API_KEY` environment variable on the Go service. Treat it as a shared secret: call these endpoints from servers only, never from browser code.
+
+## Endpoints
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /v1/public/schedule` | The public event schedule |
+| `GET /v1/public/sponsors` | Sponsors with tiers, links, and logos |
+| `GET /v1/public/faq` | Frequently asked questions |
+
+All responses use Harp's standard envelope:
+
+```json
+{ "data": [ ... ] }
+```
+
+## Sponsor logos
+
+`logo_data` is raw base64, not a URL. Pair it with `logo_content_type` to build a data URI. Because logos are inlined, the sponsors response grows with every sponsor; cache accordingly on the consumer side.
+
+## Example
+
+```bash
+curl -H "X-API-Key: $HARP_PUBLIC_API_KEY" \
+  "$HARP_API_BASE_URL/v1/public/schedule"
+```
+
+<Note>
+  The full private API (applications, reviews, scans, and everything else the portal uses) is documented via Swagger in the harp repo and requires an authenticated user session. It is not part of this public contract.
+</Note>
