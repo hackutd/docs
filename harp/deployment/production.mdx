@@ -12,13 +12,13 @@ The recommended stack is chosen to be as cheap as possible, mostly serverless wi
 | Compute | Google Cloud Run | Serverless, scales to zero, you pay only for requests |
 | Database | Neon | Serverless PostgreSQL with a free tier, no instance to babysit |
 | File storage | Google Cloud Storage | Pennies at hackathon scale (resumes and assets) |
-| Auth | SuperTokens, self-hosted | The core is open source, so self-hosting it costs nothing beyond compute |
+| Auth | SuperTokens | Managed service is free under 5K monthly active users; the open-source core is self-hostable if you outgrow that |
 | Email | SendGrid (or any SMTP provider) | Free tier covers most decision-email volumes |
 | Marketing site | Vercel | Free hobby tier, deploys independently of the platform |
 
 Between scale-to-zero compute and the free database tier, an off-season deployment costs close to nothing.
 
-{/* Diagram: a production topology diagram. Cloud Run running the Harp container (Go API + static portal) and a second small Cloud Run service for the SuperTokens core, both connected to Neon Postgres; GCS and SendGrid hanging off the API; a separate Vercel box for the marketing site calling the Cloud Run service's /v1/public endpoints; users and DNS at the top. */}
+{/* Diagram: a production topology diagram. Cloud Run running the Harp container (Go API + static portal) connected to Neon Postgres and the SuperTokens managed core (or an optional self-hosted core on a second Cloud Run service); GCS and SendGrid hanging off the API; a separate Vercel box for the marketing site calling the Cloud Run service's /v1/public endpoints; users and DNS at the top. */}
 
 ## How the platform ships
 
@@ -92,9 +92,9 @@ task migrate-up
 
 ## Step 3: Stand up SuperTokens
 
-SuperTokens' core is open source, so the cheapest path is self-hosting it rather than paying for the managed service. It's a single stateless container that needs a Postgres database, and Neon can host that too (a second database in the same Neon project works fine).
+The easiest and cheapest path is SuperTokens' managed service, which is free under 5,000 monthly active users. That covers a typical hackathon comfortably, and it's what HackUTD runs on. Sign up at [supertokens.com](https://supertokens.com), create a core, and copy the connection URI and API key into `SUPERTOKENS_CONNECTION_URI` and `SUPERTOKENS_API_KEY`.
 
-Deploy the core as its own small Cloud Run service:
+If you expect to exceed the free tier or just prefer running your own, the core is open source and self-hostable. It's a single stateless container that needs a Postgres database, and Neon can host that too (a second database in the same Neon project works fine). Deploy it as its own small Cloud Run service:
 
 ```bash
 gcloud run deploy supertokens \
@@ -106,8 +106,6 @@ gcloud run deploy supertokens \
 ```
 
 The service URL becomes `SUPERTOKENS_CONNECTION_URI` and the key becomes `SUPERTOKENS_API_KEY` for the API. Don't expose this service publicly beyond what the API needs; only the Harp backend should be talking to it.
-
-If you'd rather not run it, SuperTokens' managed service works identically. You just swap in their URI and key, and pay for it.
 
 ## Step 4: Create the storage bucket
 
