@@ -22,7 +22,82 @@
       {
         "group": "Projects",
         "pages": [
-          "jury",
+          {
+            "group": "Jury",
+            "pages": [
+              "jury/overview",
+              {
+                "group": "Using Jury",
+                "pages": [
+                  "jury/usage/introduction",
+                  "jury/usage/deploy",
+                  "jury/usage/judging-setup",
+                  "jury/usage/overview",
+                  {
+                    "group": "Jury Admin",
+                    "pages": [
+                      "jury/usage/admin/introduction",
+                      "jury/usage/admin/configuration",
+                      "jury/usage/admin/add-projects",
+                      "jury/usage/admin/add-judges",
+                      "jury/usage/admin/scoring",
+                      "jury/usage/admin/tracks",
+                      "jury/usage/admin/groups",
+                      "jury/usage/admin/dashboard"
+                    ]
+                  },
+                  "jury/usage/judge",
+                  "jury/usage/expo",
+                  "jury/usage/tips"
+                ]
+              },
+              "jury/contributing",
+              {
+                "group": "Technical Details",
+                "pages": [
+                  "jury/details/overview",
+                  "jury/details/principles",
+                  {
+                    "group": "Frontend",
+                    "pages": [
+                      "jury/details/frontend/introduction",
+                      "jury/details/frontend/routing",
+                      "jury/details/frontend/components",
+                      "jury/details/frontend/styling",
+                      "jury/details/frontend/api",
+                      "jury/details/frontend/store"
+                    ]
+                  },
+                  {
+                    "group": "Backend",
+                    "pages": [
+                      "jury/details/backend/introduction",
+                      "jury/details/backend/structure",
+                      "jury/details/backend/api",
+                      "jury/details/backend/database",
+                      "jury/details/backend/logging"
+                    ]
+                  },
+                  {
+                    "group": "Development Notes",
+                    "pages": [
+                      "jury/details/development/introduction",
+                      "jury/details/development/github",
+                      "jury/details/development/docs"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "jury/reference/public-api",
+                  "jury/reference/internal-api",
+                  "jury/reference/envs"
+                ]
+              }
+            ]
+          },
           {
             "group": "Harp",
             "pages": [
@@ -90,6 +165,10 @@
     {
       "source": "/harp/quickstart",
       "destination": "/harp/deployment/local"
+    },
+    {
+      "source": "/jury",
+      "destination": "/jury/overview"
     }
   ],
   "contextual": {

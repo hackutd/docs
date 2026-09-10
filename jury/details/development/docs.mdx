@@ -1,0 +1,14 @@
+---
+title: "Documentation"
+description: "Docs about the docs"
+---
+
+Writing the documentation is extremely important yet probably the hardest part of development. The Jury docs were originally hosted using [Docusaurus](https://docusaurus.io/) in the `docs/docs` directory of the Jury repository, where each markdown file represented a single page in the documentation, with the configuration at `docs/docusaurus.config.ts`. The docs now live in the [HackUTD docs repository](https://github.com/hackutd/docs) under the `jury` directory, built with [Mintlify](https://mintlify.com/). Each MDX file represents a single page, and navigation is configured in `docs.json`.
+
+## Fun thing
+
+If you want to see how many words is in the documentation, run this command in the `jury` directory of the docs repository:
+
+```bash
+find . -type f -name "*.mdx" | xargs wc -w
+```
